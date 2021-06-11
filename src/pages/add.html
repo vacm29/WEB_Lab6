@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product-Store</title>
+</head>
+<body>
+    <h1>Add a product.</h1>
+    <form>
+        <label for="productName">Product name: </label>
+        <input type="text" placeholder="Name" id="productName">
+        <label for="productBrand">Brand: </label>
+        <input type="text" placeholder="Brand" id="productBrand">
+        <label for="productPrice">Price: $</label>
+        <input type="number" placeholder="0.00" id="productPrice" step="0.01">
+		
+        
+        <input type="submit" value="Add Product" id="submit">
+        <a href="/">Back to main page</a>
+    </form>
+
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        const productName = document.getElementById('productName');
+        const productPrice = document.getElementById('productPrice');
+        const productBrand = document.getElementById('productBrand');
+        
+        const btnSubmit = document.getElementById('submit');
+        btnSubmit.addEventListener("click", (e) => {
+            e.preventDefault();
+            
+            let prodName = productName.value.trim();
+            let prodPrice = productPrice.value.trim();
+            let prodBrand = productBrand.value.trim();
+
+            // Comment to check out how server validation is working too
+            if (prodName === '') { alert('Specify a name'); return; }
+            if (prodPrice ==='' || isNaN(prodPrice)) { alert('Input valid price'); return; }
+            if (prodBrand === '') { alert('Specify a brand'); return; }
+
+            axios.post( 
+                'http://127.0.0.1:3000/products/create', 
+                {
+                    prodName: prodName,
+                    prodBrand: prodBrand,
+                    prodPrice: prodPrice
+                    
+                }
+            )
+            .then(response => {
+                console.log(response);
+                alert(`Product inserted successfully`);
+                window.location.replace('http://127.0.0.1:3000/products/all');
+            })
+            .catch(error => {
+                console.log(error.response.data)
+                alert(`Problem when inserting product ${error.response.data}`);
+            });
+        });
+    </script>
+</body>
+</html>
